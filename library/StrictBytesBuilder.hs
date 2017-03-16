@@ -4,14 +4,18 @@ module StrictBytesBuilder
   Builder,
   builderBytes,
   builderLength,
-  byte,
   bytes,
   asciiIntegral,
   asciiChar,
   storable,
+  word8,
   word16BE,
   word32BE,
   word64BE,
+  int8,
+  int16BE,
+  int32BE,
+  int64BE,
 )
 where
 
@@ -62,8 +66,8 @@ bytes bytes =
 
 {-# INLINE byte #-}
 byte :: Word8 -> Builder
-byte byte =
-  Builder 1 (A.byte byte)
+byte =
+  word8
 
 
 -- * Extras
@@ -102,6 +106,11 @@ storable value =
     size =
       sizeOf value
 
+{-# INLINE word8 #-}
+word8 :: Word8 -> Builder
+word8 =
+  Builder 1 . A.word8
+
 {-# INLINE word16BE #-}
 word16BE :: Word16 -> Builder
 word16BE =
@@ -116,3 +125,23 @@ word32BE =
 word64BE :: Word64 -> Builder
 word64BE =
   Builder 8 . A.word64BE
+
+{-# INLINE int8 #-}
+int8 :: Int8 -> Builder
+int8 =
+  Builder 1 . A.int8
+
+{-# INLINE int16BE #-}
+int16BE :: Int16 -> Builder
+int16BE =
+  Builder 2 . A.int16BE
+
+{-# INLINE int32BE #-}
+int32BE :: Int32 -> Builder
+int32BE =
+  Builder 4 . A.int32BE
+
+{-# INLINE int64BE #-}
+int64BE :: Int64 -> Builder
+int64BE =
+  Builder 8 . A.int64BE

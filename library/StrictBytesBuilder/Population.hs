@@ -29,16 +29,16 @@ bytes (B.PS foreignPointer offset length) =
   withForeignPtr foreignPointer $ \ptr' ->
   B.memcpy ptr (plusPtr ptr' offset) length $> plusPtr ptr length
 
-{-# INLINE byte #-}
-byte :: Word8 -> Population
-byte byte =
-  Population $ \ptr ->
-  poke ptr byte $> plusPtr ptr 1
-
 {-# INLINE storable #-}
 storable :: Storable a => Int -> a -> Population
 storable size value =
   Population (\ptr -> poke (castPtr ptr) value $> plusPtr ptr size)
+
+{-# INLINE word8 #-}
+word8 :: Word8 -> Population
+word8 value =
+  Population $ \ptr ->
+  poke ptr value $> plusPtr ptr 1
 
 {-# INLINE word16BE #-}
 word16BE :: Word16 -> Population
@@ -96,3 +96,26 @@ word64BE value =
     return (plusPtr ptr 8)
 #endif
 #endif
+
+{-# INLINE int8 #-}
+int8 :: Int8 -> Population
+int8 =
+  word8 . fromIntegral
+
+-- | Encoding 'Int16's in big endian format.
+{-# INLINE int16BE #-}
+int16BE :: Int16 -> Population
+int16BE =
+  word16BE . fromIntegral
+
+-- | Encoding 'Int32's in big endian format.
+{-# INLINE int32BE #-}
+int32BE :: Int32 -> Population
+int32BE =
+  word32BE . fromIntegral
+
+-- | Encoding 'Int64's in big endian format.
+{-# INLINE int64BE #-}
+int64BE :: Int64 -> Population
+int64BE =
+  word64BE . fromIntegral
