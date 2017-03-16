@@ -5,6 +5,7 @@ module StrictBytesBuilder
   builderBytes,
   builderLength,
   bytes,
+  lazyBytes,
   asciiIntegral,
   asciiChar,
   utf8Char,
@@ -25,6 +26,7 @@ import qualified StrictBytesBuilder.Population as A
 import qualified StrictBytesBuilder.UncheckedShifting as D
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Internal as C
+import qualified Data.ByteString.Lazy as F
 import qualified StrictBytesBuilder.UTF8 as E
 
 
@@ -65,6 +67,11 @@ builderLength (Builder size population) =
 bytes :: ByteString -> Builder
 bytes bytes =
   Builder (B.length bytes) (A.bytes bytes)
+
+{-# INLINE lazyBytes #-}
+lazyBytes :: F.ByteString -> Builder
+lazyBytes =
+  F.foldlChunks (\builder -> mappend builder . bytes) mempty
 
 {-# INLINE byte #-}
 byte :: Word8 -> Builder

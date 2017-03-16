@@ -3,6 +3,7 @@ module StrictBytesBuilder.Population where
 
 import StrictBytesBuilder.Prelude
 import qualified Data.ByteString.Internal as B
+import qualified Data.ByteString.Lazy.Internal as C
 import qualified StrictBytesBuilder.UncheckedShifting as D
 import qualified StrictBytesBuilder.UTF8 as E
 
