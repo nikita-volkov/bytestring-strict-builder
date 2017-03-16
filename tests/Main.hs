@@ -16,15 +16,15 @@ main =
     testProperty "Packing a list of bytes is isomorphic to appending a list of builders" $
     \byteList ->
       A.pack byteList ===
-      B.run (foldMap B.byte byteList)
+      B.builderBytes (foldMap B.byte byteList)
     ,
     testProperty "Concatting a list of bytestrings is isomorphic to fold-mapping with builders" $
     \bytesList ->
       mconcat bytesList ===
-      B.run (foldMap B.bytes bytesList)
+      B.builderBytes (foldMap B.bytes bytesList)
     ,
     testProperty "Concatting a list of bytestrings is isomorphic to concatting a list of builders" $
     \bytesList ->
       mconcat bytesList ===
-      B.run (mconcat (map B.bytes bytesList))
+      B.builderBytes (mconcat (map B.bytes bytesList))
   ]

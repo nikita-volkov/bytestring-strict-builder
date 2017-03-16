@@ -7,7 +7,7 @@ import qualified StrictBytesBuilder.UncheckedShifting as D
 
 
 newtype Population =
-  Population { run :: Ptr Word8 -> IO (Ptr Word8) }
+  Population { populationPtrUpdate :: Ptr Word8 -> IO (Ptr Word8) }
 
 instance Monoid Population where
   {-# INLINE mempty #-}

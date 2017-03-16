@@ -2,7 +2,8 @@
 module StrictBytesBuilder
 (
   Builder,
-  run,
+  builderBytes,
+  builderLength,
   byte,
   bytes,
   asciiIntegral,
@@ -42,9 +43,13 @@ instance IsString Builder where
 -- *
 -------------------------
 
-run :: Builder -> ByteString
-run (Builder size population) =
-  C.unsafeCreate size $ \ptr -> A.run population ptr $> ()
+builderBytes :: Builder -> ByteString
+builderBytes (Builder size population) =
+  C.unsafeCreate size $ \ptr -> A.populationPtrUpdate population ptr $> ()
+
+builderLength :: Builder -> Int
+builderLength (Builder size population) =
+  size
 
 
 -- * Primitives
