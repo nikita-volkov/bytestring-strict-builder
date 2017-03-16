@@ -4,6 +4,7 @@ module StrictBytesBuilder.Population where
 import StrictBytesBuilder.Prelude
 import qualified Data.ByteString.Internal as B
 import qualified StrictBytesBuilder.UncheckedShifting as D
+import qualified StrictBytesBuilder.UTF8 as E
 
 
 newtype Population =
@@ -119,3 +120,47 @@ int32BE =
 int64BE :: Int64 -> Population
 int64BE =
   word64BE . fromIntegral
+
+{-# INLINE bytes_1 #-}
+bytes_1 :: Word8 -> Population
+bytes_1 byte1 =
+  Population $ \ptr -> do
+    poke ptr byte1
+    return (plusPtr ptr 1)
+
+{-# INLINE bytes_2 #-}
+bytes_2 :: Word8 -> Word8 -> Population
+bytes_2 byte1 byte2 =
+  Population $ \ptr -> do
+    poke ptr byte1
+    pokeByteOff ptr 1 byte2
+    return (plusPtr ptr 2)
+
+{-# INLINE bytes_3 #-}
+bytes_3 :: Word8 -> Word8 -> Word8 -> Population
+bytes_3 byte1 byte2 byte3 =
+  Population $ \ptr -> do
+    poke ptr byte1
+    pokeByteOff ptr 1 byte2
+    pokeByteOff ptr 2 byte3
+    return (plusPtr ptr 3)
+
+{-# INLINE bytes_4 #-}
+bytes_4 :: Word8 -> Word8 -> Word8 -> Word8 -> Population
+bytes_4 byte1 byte2 byte3 byte4 =
+  Population $ \ptr -> do
+    poke ptr byte1
+    pokeByteOff ptr 1 byte2
+    pokeByteOff ptr 2 byte3
+    pokeByteOff ptr 3 byte4
+    return (plusPtr ptr 4)
+
+{-# INLINE utf8UnicodeCodePoint #-}
+utf8UnicodeCodePoint :: Int -> Population
+utf8UnicodeCodePoint x =
+  E.unicodeCodePoint x bytes_1 bytes_2 bytes_3 bytes_4
+
+{-# INLINE utf8Char #-}
+utf8Char :: Int -> Population
+utf8Char x =
+  E.unicodeCodePoint x bytes_1 bytes_2 bytes_3 bytes_4

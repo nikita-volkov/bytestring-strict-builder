@@ -7,6 +7,7 @@ module StrictBytesBuilder
   bytes,
   asciiIntegral,
   asciiChar,
+  utf8Char,
   storable,
   word8,
   word16BE,
@@ -24,6 +25,7 @@ import qualified StrictBytesBuilder.Population as A
 import qualified StrictBytesBuilder.UncheckedShifting as D
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Internal as C
+import qualified StrictBytesBuilder.UTF8 as E
 
 
 data Builder =
@@ -145,3 +147,12 @@ int32BE =
 int64BE :: Int64 -> Builder
 int64BE =
   Builder 8 . A.int64BE
+
+{-# INLINE utf8Char #-}
+utf8Char :: Char -> Builder
+utf8Char x =
+  E.char x
+  (\a -> Builder 1 (A.bytes_1 a))
+  (\a b -> Builder 2 (A.bytes_2 a b))
+  (\a b c -> Builder 3 (A.bytes_3 a b c))
+  (\a b c d -> Builder 4 (A.bytes_4 a b c d))

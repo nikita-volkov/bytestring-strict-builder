@@ -1,7 +1,7 @@
 name:
   strict-bytes-builder
 version:
-  0.3
+  0.3.1
 category:
   Text, ByteString, Builders, Serialization
 synopsis:
@@ -45,6 +45,7 @@ library
     StrictBytesBuilder.Population
     StrictBytesBuilder.Prelude
     StrictBytesBuilder.UncheckedShifting
+    StrictBytesBuilder.UTF8
   build-depends:
     semigroups >= 0.18 && < 0.19,
     bytestring >= 0.10 && < 0.11,
