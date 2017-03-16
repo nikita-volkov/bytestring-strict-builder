@@ -3,7 +3,7 @@ name:
 version:
   0.3
 category:
-  Text
+  Text, ByteString, Builders, Serialization
 synopsis:
   An efficient strict text builder
 homepage:
