@@ -50,6 +50,9 @@ instance IsString Builder where
 -- *
 -------------------------
 
+{-|
+Efficiently constructs a strict bytestring.
+-}
 builderBytes :: Builder -> ByteString
 builderBytes (Builder size population) =
   C.unsafeCreate size $ \ptr -> A.populationPtrUpdate population ptr $> ()
