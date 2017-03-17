@@ -158,8 +158,25 @@ int64BE =
 {-# INLINE utf8Char #-}
 utf8Char :: Char -> Builder
 utf8Char x =
-  E.char x
-  (\a -> Builder 1 (A.bytes_1 a))
-  (\a b -> Builder 2 (A.bytes_2 a b))
-  (\a b c -> Builder 3 (A.bytes_3 a b c))
-  (\a b c d -> Builder 4 (A.bytes_4 a b c d))
+  E.char x bytes_1 bytes_2 bytes_3 bytes_4
+
+{-# INLINE bytes_1 #-}
+bytes_1 :: Word8 -> Builder
+bytes_1 b1 =
+  Builder 1 (A.bytes_1 b1)
+
+{-# INLINE bytes_2 #-}
+bytes_2 :: Word8 -> Word8 -> Builder
+bytes_2 b1 b2 =
+  Builder 2 (A.bytes_2 b1 b2)
+
+{-# INLINE bytes_3 #-}
+bytes_3 :: Word8 -> Word8 -> Word8 -> Builder
+bytes_3 b1 b2 b3 =
+  Builder 3 (A.bytes_3 b1 b2 b3)
+
+{-# INLINE bytes_4 #-}
+bytes_4 :: Word8 -> Word8 -> Word8 -> Word8 -> Builder
+bytes_4 b1 b2 b3 b4 =
+  Builder 4 (A.bytes_4 b1 b2 b3 b4)
+
