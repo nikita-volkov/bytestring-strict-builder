@@ -2,6 +2,7 @@ module ByteString.StrictBuilder
 (
   Builder,
   builderBytes,
+  builderChunksBuilder,
   builderLength,
   bytes,
   lazyBytes,
@@ -26,6 +27,7 @@ import qualified ByteString.StrictBuilder.UncheckedShifting as D
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Internal as C
 import qualified Data.ByteString.Lazy as F
+import qualified Data.ByteString.Builder.Internal as G
 import qualified ByteString.StrictBuilder.UTF8 as E
 
 
@@ -56,6 +58,13 @@ Efficiently constructs a strict bytestring.
 builderBytes :: Builder -> ByteString
 builderBytes (Builder size population) =
   C.unsafeCreate size $ \ptr -> A.populationPtrUpdate population ptr $> ()
+
+{-|
+Converts into the standard lazy bytestring builder.
+-}
+builderChunksBuilder :: Builder -> G.Builder
+builderChunksBuilder (Builder size population) =
+  G.ensureFree size <> A.populationChunksBuilder population
 
 builderLength :: Builder -> Int
 builderLength (Builder size population) =

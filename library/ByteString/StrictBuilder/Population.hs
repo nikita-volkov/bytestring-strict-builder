@@ -4,6 +4,7 @@ module ByteString.StrictBuilder.Population where
 import ByteString.StrictBuilder.Prelude
 import qualified Data.ByteString.Internal as B
 import qualified Data.ByteString.Lazy.Internal as C
+import qualified Data.ByteString.Builder.Internal as G
 import qualified ByteString.StrictBuilder.UncheckedShifting as D
 import qualified ByteString.StrictBuilder.UTF8 as E
 
@@ -20,6 +21,21 @@ instance Monoid Population where
     Population (leftPtrUpdate >=> rightPtrUpdate)
 
 instance Semigroup Population
+
+
+{-|
+Turns into the standard lazy bytestring builder.
+-}
+{-# INLINE populationChunksBuilder #-}
+populationChunksBuilder :: Population -> G.Builder
+populationChunksBuilder (Population ptrUpdate) =
+  G.builder stepUpdate
+  where
+    stepUpdate :: G.BuildStep a -> G.BuildStep a
+    stepUpdate nextStep (G.BufferRange beginningPtr afterPtr) =
+      do
+        newBeginningPtr <- ptrUpdate beginningPtr
+        nextStep $! G.BufferRange newBeginningPtr afterPtr
 
 -- |
 -- Write the given bytes into the pointer and
