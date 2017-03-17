@@ -1,4 +1,4 @@
-module StrictBytesBuilder.Prelude
+module ByteString.StrictBuilder.Prelude
 (
   module Exports,
 )

@@ -1,15 +1,15 @@
 name:
-  strict-bytes-builder
+  bytestring-strict-builder
 version:
-  0.3.2
+  0.4
 category:
   Text, ByteString, Builders, Serialization
 synopsis:
-  An efficient strict text builder
+  An efficient strict bytestring builder
 homepage:
-  https://github.com/nikita-volkov/strict-bytes-builder 
+  https://github.com/nikita-volkov/bytestring-strict-builder 
 bug-reports:
-  https://github.com/nikita-volkov/strict-bytes-builder/issues 
+  https://github.com/nikita-volkov/bytestring-strict-builder/issues 
 author:
   Nikita Volkov <nikita.y.volkov@mail.ru>
 maintainer:
@@ -29,7 +29,7 @@ source-repository head
   type:
     git
   location:
-    git://github.com/nikita-volkov/strict-bytes-builder.git
+    git://github.com/nikita-volkov/bytestring-strict-builder.git
 
 library
   hs-source-dirs:
@@ -40,12 +40,12 @@ library
   default-language:
     Haskell2010
   exposed-modules:
-    StrictBytesBuilder
+    ByteString.StrictBuilder
   other-modules:
-    StrictBytesBuilder.Population
-    StrictBytesBuilder.Prelude
-    StrictBytesBuilder.UncheckedShifting
-    StrictBytesBuilder.UTF8
+    ByteString.StrictBuilder.Population
+    ByteString.StrictBuilder.Prelude
+    ByteString.StrictBuilder.UncheckedShifting
+    ByteString.StrictBuilder.UTF8
   build-depends:
     semigroups >= 0.18 && < 0.19,
     bytestring >= 0.10 && < 0.11,
@@ -64,7 +64,7 @@ test-suite tests
   default-language:
     Haskell2010
   build-depends:
-    strict-bytes-builder,
+    bytestring-strict-builder,
     -- testing:
     tasty == 0.11.*,
     tasty-quickcheck == 0.8.*,

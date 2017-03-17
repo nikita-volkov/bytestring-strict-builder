@@ -1,11 +1,11 @@
 {-# LANGUAGE CPP #-}
-module StrictBytesBuilder.Population where
+module ByteString.StrictBuilder.Population where
 
-import StrictBytesBuilder.Prelude
+import ByteString.StrictBuilder.Prelude
 import qualified Data.ByteString.Internal as B
 import qualified Data.ByteString.Lazy.Internal as C
-import qualified StrictBytesBuilder.UncheckedShifting as D
-import qualified StrictBytesBuilder.UTF8 as E
+import qualified ByteString.StrictBuilder.UncheckedShifting as D
+import qualified ByteString.StrictBuilder.UTF8 as E
 
 
 newtype Population =

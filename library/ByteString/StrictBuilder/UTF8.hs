@@ -1,9 +1,9 @@
 {- |
 Utilities for the UTF-8 encoding.
 -}
-module StrictBytesBuilder.UTF8 where
+module ByteString.StrictBuilder.UTF8 where
 
-import StrictBytesBuilder.Prelude
+import ByteString.StrictBuilder.Prelude
 
 
 {-|

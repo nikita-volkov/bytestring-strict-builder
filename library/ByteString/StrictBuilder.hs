@@ -1,5 +1,4 @@
-{-# LANGUAGE CPP #-}
-module StrictBytesBuilder
+module ByteString.StrictBuilder
 (
   Builder,
   builderBytes,
@@ -21,13 +20,13 @@ module StrictBytesBuilder
 )
 where
 
-import StrictBytesBuilder.Prelude
-import qualified StrictBytesBuilder.Population as A
-import qualified StrictBytesBuilder.UncheckedShifting as D
+import ByteString.StrictBuilder.Prelude
+import qualified ByteString.StrictBuilder.Population as A
+import qualified ByteString.StrictBuilder.UncheckedShifting as D
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Internal as C
 import qualified Data.ByteString.Lazy as F
-import qualified StrictBytesBuilder.UTF8 as E
+import qualified ByteString.StrictBuilder.UTF8 as E
 
 
 data Builder =

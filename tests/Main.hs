@@ -6,7 +6,7 @@ import Test.Tasty
 import Test.Tasty.HUnit
 import Test.Tasty.QuickCheck
 import qualified Data.ByteString as A
-import qualified StrictBytesBuilder as B
+import qualified ByteString.StrictBuilder as B
 
 
 main =

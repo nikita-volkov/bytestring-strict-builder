@@ -12,7 +12,7 @@
 -- These functions are undefined when the amount being shifted by is
 -- greater than the size in bits of a machine Int#.-
 --
-module StrictBytesBuilder.UncheckedShifting (
+module ByteString.StrictBuilder.UncheckedShifting (
     shiftr_w16
   , shiftr_w32
   , shiftr_w64
