@@ -1,12 +1,12 @@
 module Main where
 
-import Prelude
+import Prelude hiding (concat)
 import Criterion.Main
 import ByteString.StrictBuilder
 
 
 main =
-  defaultMain [leftAppends, rightAppends]
+  defaultMain [leftAppends, rightAppends, concat]
 
 leftAppends :: Benchmark
 leftAppends =
@@ -27,3 +27,10 @@ rightAppends =
       where
         builder =
           foldr (<>) mempty bytesList
+
+concat :: Benchmark
+concat =
+  bench "concat"  $ whnf action $! replicate 10000 $ bytes "abc"
+  where
+    action bytesList =
+      builderBytes (mconcat bytesList)
