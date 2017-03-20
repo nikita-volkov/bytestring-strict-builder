@@ -23,7 +23,6 @@ where
 
 import ByteString.StrictBuilder.Prelude
 import qualified ByteString.StrictBuilder.Population as A
-import qualified ByteString.StrictBuilder.UncheckedShifting as D
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Internal as C
 import qualified Data.ByteString.Lazy as F

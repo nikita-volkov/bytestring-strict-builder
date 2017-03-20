@@ -5,7 +5,7 @@ import ByteString.StrictBuilder.Prelude
 import qualified Data.ByteString.Internal as B
 import qualified Data.ByteString.Lazy.Internal as C
 import qualified Data.ByteString.Builder.Internal as G
-import qualified ByteString.StrictBuilder.UncheckedShifting as D
+import qualified ByteString.StrictBuilder.Population.UncheckedShifting as D
 import qualified ByteString.StrictBuilder.UTF8 as E
 
 
