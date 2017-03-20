@@ -37,6 +37,19 @@ populationChunksBuilder (Population ptrUpdate) =
         newBeginningPtr <- ptrUpdate beginningPtr
         nextStep $! G.BufferRange newBeginningPtr afterPtr
 
+{-# INLINE followParallelly #-}
+followParallelly :: Population -> Int -> Population -> Population
+followParallelly (Population followerPtrUpdate) followeeLength (Population followeePtrUpdate) =
+  Population ptrUpdate
+  where
+    ptrUpdate ptr =
+      do
+        lock <- newEmptyMVar
+        forkIO $ do
+          followeePtrUpdate ptr
+          putMVar lock ()
+        followerPtrUpdate (plusPtr ptr followeeLength) <* takeMVar lock
+
 -- |
 -- Write the given bytes into the pointer and
 -- return a pointer incremented by the amount of written bytes.
