@@ -10,20 +10,20 @@ main =
 
 leftAppends :: Benchmark
 leftAppends =
-  bench "leftAppends" $ whnf action $ ()
+  bench "leftAppends" $ whnf action $! replicate 1000 $ bytes "abc"
   where
-    action _ =
+    action bytesList =
       builderBytes builder
       where
         builder =
-          ((bytes "abc" <> bytes "abc") <> bytes "abc") <> bytes "abc"
+          foldl' (<>) mempty bytesList
 
 rightAppends :: Benchmark
 rightAppends =
-  bench "rightAppends" $ whnf action $ ()
+  bench "rightAppends"  $ whnf action $! replicate 1000 $ bytes "abc"
   where
-    action _ =
+    action bytesList =
       builderBytes builder
       where
         builder =
-          bytes "abc" <> (bytes "abc" <> (bytes "abc" <> bytes "abc"))
+          foldr (<>) mempty bytesList
