@@ -60,11 +60,16 @@ builderBytes (Builder size population) =
 
 {-|
 Converts into the standard lazy bytestring builder.
+Does so efficiently using the internal APIs of \"bytestring\",
+without producing any intermediate representation.
 -}
 builderChunksBuilder :: Builder -> G.Builder
 builderChunksBuilder (Builder size population) =
   G.ensureFree size <> A.populationChunksBuilder population
 
+{-|
+/O(1)/. Gets the size of the bytestring that is to be produced.
+-}
 builderLength :: Builder -> Int
 builderLength (Builder size population) =
   size
