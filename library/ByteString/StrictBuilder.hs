@@ -40,6 +40,9 @@ instance Monoid Builder where
   {-# INLINE mappend #-}
   mappend (Builder leftSize leftPopulation) (Builder rightSize rightPopulation) =
     Builder (leftSize + rightSize) (leftPopulation <> rightPopulation)
+  {-# INLINE mconcat #-}
+  mconcat =
+    foldl' mappend mempty
 
 instance Semigroup Builder
 
