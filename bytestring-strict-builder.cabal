@@ -9,10 +9,10 @@ synopsis:
 description:
   According to 
   <https://github.com/nikita-volkov/bytestring-builders-benchmark the competition benchmarks>, 
-  this library provides by far the fastest builder of strict bytestrings. 
+  this library provides the fastest builder of strict bytestrings. 
   .
   Practical benchmarks have proven it to be highly performant aswell.
-  The benchmarks of the encoders from the \"postgresql-binary\" library have shown
+  The encoders from the \"postgresql-binary\" library have shown
   a stable performance improvement by factors of up to 10 after the migration
   from the standard builder to \"bytestring-strict-builder\".
 homepage:
