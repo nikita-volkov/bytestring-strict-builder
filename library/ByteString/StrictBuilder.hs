@@ -41,8 +41,13 @@ instance Monoid Builder where
   mappend (Builder leftSize leftPopulation) (Builder rightSize rightPopulation) =
     Builder (leftSize + rightSize) (leftPopulation <> rightPopulation)
   {-# INLINE mconcat #-}
-  mconcat =
-    foldl' mappend mempty
+  mconcat builders =
+    Builder size population
+    where
+      size =
+        getSum (foldMap (\(Builder x _) -> Sum x) builders)
+      population =
+        foldMap (\(Builder _ x) -> x) builders
 
 instance Semigroup Builder
 
