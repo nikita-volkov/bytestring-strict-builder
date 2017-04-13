@@ -4,6 +4,7 @@ module ByteString.StrictBuilder
   builderBytes,
   builderChunksBuilder,
   builderLength,
+  builderPtrFiller,
   bytes,
   lazyBytes,
   asciiIntegral,
@@ -55,6 +56,10 @@ instance IsString Builder where
   fromString =
     bytes . fromString
 
+instance Show Builder where
+  show =
+    show . builderBytes
+
 
 -- *
 -------------------------
@@ -62,6 +67,7 @@ instance IsString Builder where
 {-|
 Efficiently constructs a strict bytestring.
 -}
+{-# INLINE builderBytes #-}
 builderBytes :: Builder -> ByteString
 builderBytes (Builder size population) =
   C.unsafeCreate size $ \ptr -> A.populationPtrUpdate population ptr $> ()
@@ -71,6 +77,7 @@ Converts into the standard lazy bytestring builder.
 Does so efficiently using the internal APIs of \"bytestring\",
 without producing any intermediate representation.
 -}
+{-# INLINE builderChunksBuilder #-}
 builderChunksBuilder :: Builder -> G.Builder
 builderChunksBuilder (Builder size population) =
   G.ensureFree size <> A.populationChunksBuilder population
@@ -78,9 +85,21 @@ builderChunksBuilder (Builder size population) =
 {-|
 /O(1)/. Gets the size of the bytestring that is to be produced.
 -}
+{-# INLINE builderLength #-}
 builderLength :: Builder -> Int
 builderLength (Builder size population) =
   size
+
+{-|
+Use the builder to populate a buffer.
+It is your responsibility to ensure that the bounds are not exceeded.
+-}
+{-# INLINE builderPtrFiller #-}
+builderPtrFiller ::
+  Builder -> 
+  (Int -> (Ptr Word8 -> IO ()) -> result) {-^ A continuation on the amount of bytes to be written and the action populating the pointer. -} -> result
+builderPtrFiller (Builder size (A.Population ptrUpdate)) cont =
+  cont size (void . ptrUpdate)
 
 
 -- * Primitives
