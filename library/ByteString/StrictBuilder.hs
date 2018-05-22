@@ -28,6 +28,7 @@ import qualified Data.ByteString as B
 import qualified Data.ByteString.Internal as C
 import qualified Data.ByteString.Lazy as F
 import qualified Data.ByteString.Builder.Internal as G
+import qualified Data.Semigroup
 import qualified ByteString.StrictBuilder.UTF8 as E
 
 
@@ -50,7 +51,8 @@ instance Monoid Builder where
       population =
         foldMap (\(Builder _ x) -> x) builders
 
-instance Semigroup Builder
+instance Semigroup Builder where
+  (<>) = mappend
 
 instance IsString Builder where
   fromString =

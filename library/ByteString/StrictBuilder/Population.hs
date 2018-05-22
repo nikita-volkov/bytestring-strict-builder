@@ -5,6 +5,7 @@ import ByteString.StrictBuilder.Prelude
 import qualified Data.ByteString.Internal as B
 import qualified Data.ByteString.Lazy.Internal as C
 import qualified Data.ByteString.Builder.Internal as G
+import qualified Data.Semigroup
 import qualified ByteString.StrictBuilder.Population.UncheckedShifting as D
 import qualified ByteString.StrictBuilder.UTF8 as E
 
@@ -20,7 +21,8 @@ instance Monoid Population where
   mappend (Population leftPtrUpdate) (Population rightPtrUpdate) =
     Population (leftPtrUpdate >=> rightPtrUpdate)
 
-instance Semigroup Population
+instance Semigroup Population where
+  (<>) = mappend
 
 
 {-|
