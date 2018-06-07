@@ -50,7 +50,8 @@ instance Monoid Builder where
       population =
         foldMap (\(Builder _ x) -> x) builders
 
-instance Semigroup Builder
+instance Semigroup Builder where
+  (<>) = mappend
 
 instance IsString Builder where
   fromString =

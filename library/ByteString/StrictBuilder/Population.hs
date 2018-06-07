@@ -20,7 +20,8 @@ instance Monoid Population where
   mappend (Population leftPtrUpdate) (Population rightPtrUpdate) =
     Population (leftPtrUpdate >=> rightPtrUpdate)
 
-instance Semigroup Population
+instance Semigroup Population where
+  (<>) = mappend
 
 
 {-|
