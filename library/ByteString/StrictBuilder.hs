@@ -28,6 +28,7 @@ import qualified Data.ByteString as B
 import qualified Data.ByteString.Internal as C
 import qualified Data.ByteString.Lazy as F
 import qualified Data.ByteString.Builder.Internal as G
+import qualified Data.Semigroup
 import qualified ByteString.StrictBuilder.UTF8 as E
 
 
