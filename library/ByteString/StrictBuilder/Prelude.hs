@@ -4,6 +4,6 @@ module ByteString.StrictBuilder.Prelude
 )
 where
 
-import BasePrelude as Exports
+import BasePrelude as Exports hiding ((<>))
 import Data.ByteString as Exports (ByteString)
-import Data.Semigroup as Exports hiding ((<>), Last(..), First(..))
+import Data.Semigroup as Exports hiding (Last(..), First(..))
