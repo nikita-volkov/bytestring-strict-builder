@@ -55,7 +55,7 @@ library
     ByteString.StrictBuilder.Population.UncheckedShifting
     ByteString.StrictBuilder.UTF8
   build-depends:
-    semigroups >= 0.18 && < 0.19,
+    semigroups >= 0.18 && < 0.20,
     bytestring >= 0.10.2 && < 0.11,
     base-prelude >= 1.2 && < 2,
     base >= 4.6 && < 5
