@@ -46,7 +46,7 @@ instance Monoid Builder where
     Builder size population
     where
       size =
-        getSum (foldMap (\(Builder x _) -> Sum x) builders)
+        foldl' (\acc (Builder x _) -> acc + x) 0 builders
       population =
         foldMap (\(Builder _ x) -> x) builders
 
