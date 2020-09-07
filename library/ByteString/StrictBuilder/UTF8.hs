@@ -19,8 +19,8 @@ type UTF8Char =
 
 {-# INLINE char #-}
 char :: Char -> UTF8Char
-char =
-  unicodeCodePoint . ord
+char c =
+  unicodeCodePoint $ ord c
 
 {-# INLINE unicodeCodePoint #-}
 unicodeCodePoint :: Int -> UTF8Char
