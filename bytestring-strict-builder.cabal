@@ -64,5 +64,5 @@ benchmark benchmarks
   default-language: Haskell2010
   build-depends:
     bytestring-strict-builder,
-    gauge >=0.2.5 && <0.3,
+    criterion >=1.5.9 && <1.6,
     rerebase >=1.10 && <2

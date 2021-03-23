@@ -1,7 +1,7 @@
 module Main where
 
 import Prelude hiding (concat)
-import Gauge.Main
+import Criterion.Main
 import ByteString.StrictBuilder
 
 
