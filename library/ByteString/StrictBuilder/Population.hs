@@ -12,16 +12,14 @@ import qualified ByteString.StrictBuilder.UTF8 as E
 newtype Population =
   Population { populationPtrUpdate :: Ptr Word8 -> IO (Ptr Word8) }
 
+instance Semigroup Population where
+  (<>) (Population leftPtrUpdate) (Population rightPtrUpdate) =
+    Population (leftPtrUpdate >=> rightPtrUpdate)
+
 instance Monoid Population where
   {-# INLINE mempty #-}
   mempty =
     Population return
-  {-# INLINE mappend #-}
-  mappend (Population leftPtrUpdate) (Population rightPtrUpdate) =
-    Population (leftPtrUpdate >=> rightPtrUpdate)
-
-instance Semigroup Population where
-  (<>) = mappend
 
 
 {-|

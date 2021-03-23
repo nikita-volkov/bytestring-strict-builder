@@ -34,13 +34,22 @@ import qualified ByteString.StrictBuilder.UTF8 as E
 data Builder =
   Builder !Int !A.Population
 
+instance Semigroup Builder where
+  (<>) (Builder leftSize leftPopulation) (Builder rightSize rightPopulation) =
+    Builder (leftSize + rightSize) (leftPopulation <> rightPopulation)
+  {-# INLINE sconcat #-}
+  sconcat builders =
+    Builder size population
+    where
+      size =
+        foldl' (\acc (Builder x _) -> acc + x) 0 builders
+      population =
+        foldMap (\(Builder _ x) -> x) builders
+
 instance Monoid Builder where
   {-# INLINE mempty #-}
   mempty =
     Builder 0 mempty
-  {-# INLINE mappend #-}
-  mappend (Builder leftSize leftPopulation) (Builder rightSize rightPopulation) =
-    Builder (leftSize + rightSize) (leftPopulation <> rightPopulation)
   {-# INLINE mconcat #-}
   mconcat builders =
     Builder size population
@@ -49,9 +58,6 @@ instance Monoid Builder where
         foldl' (\acc (Builder x _) -> acc + x) 0 builders
       population =
         foldMap (\(Builder _ x) -> x) builders
-
-instance Semigroup Builder where
-  (<>) = mappend
 
 instance IsString Builder where
   fromString =
