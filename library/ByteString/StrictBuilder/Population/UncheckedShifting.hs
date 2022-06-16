@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+
 -- |
 -- Copyright   : (c) 2010 Simon Meier
 --
@@ -11,16 +12,14 @@
 --
 -- These functions are undefined when the amount being shifted by is
 -- greater than the size in bits of a machine Int#.-
---
-module ByteString.StrictBuilder.Population.UncheckedShifting (
-    shiftr_w16
-  , shiftr_w32
-  , shiftr_w64
-  , shiftr_w
-
-  , caseWordSize_32_64
-  ) where
-
+module ByteString.StrictBuilder.Population.UncheckedShifting
+  ( shiftr_w16,
+    shiftr_w32,
+    shiftr_w64,
+    shiftr_w,
+    caseWordSize_32_64,
+  )
+where
 
 #if !defined(__HADDOCK__)
 import GHC.Base
@@ -33,9 +32,8 @@ import GHC.Word (uncheckedShiftRL64#)
 import Data.Word
 #endif
 
-import Prelude
 import Foreign
-
+import Prelude
 
 ------------------------------------------------------------------------
 -- Unchecked shifts
@@ -82,20 +80,26 @@ shiftr_w32 = shiftR
 shiftr_w64 = shiftR
 #endif
 
-
 -- | Select an implementation depending on the bit-size of 'Word's.
 -- Currently, it produces a runtime failure if the bitsize is different.
 -- This is detected by the testsuite.
 {-# INLINE caseWordSize_32_64 #-}
-caseWordSize_32_64 :: a -- Value to use for 32-bit 'Word's
-                   -> a -- Value to use for 64-bit 'Word's
-                   -> a
-caseWordSize_32_64 f32 f64 =
+caseWordSize_32_64 ::
+  -- | Value to use for 32-bit 'Word's
+  a ->
+  -- | Value to use for 64-bit 'Word's
+  a ->
+  a
 #if MIN_VERSION_base(4,7,0)
+caseWordSize_32_64 f32 f64 =
   case finiteBitSize (undefined :: Word) of
-#else
-  case bitSize (undefined :: Word) of
-#endif
     32 -> f32
     64 -> f64
     s  -> error $ "caseWordSize_32_64: unsupported Word bit-size " ++ show s
+#else
+caseWordSize_32_64 f32 f64 =
+  case bitSize (undefined :: Word) of
+    32 -> f32
+    64 -> f64
+    s  -> error $ "caseWordSize_32_64: unsupported Word bit-size " ++ show s
+#endif

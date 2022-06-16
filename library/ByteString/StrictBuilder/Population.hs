@@ -1,16 +1,15 @@
 {-# LANGUAGE CPP #-}
+
 module ByteString.StrictBuilder.Population where
 
+import qualified ByteString.StrictBuilder.Population.UncheckedShifting as D
 import ByteString.StrictBuilder.Prelude
+import qualified ByteString.StrictBuilder.UTF8 as E
+import qualified Data.ByteString.Builder.Internal as G
 import qualified Data.ByteString.Internal as B
 import qualified Data.ByteString.Lazy.Internal as C
-import qualified Data.ByteString.Builder.Internal as G
-import qualified ByteString.StrictBuilder.Population.UncheckedShifting as D
-import qualified ByteString.StrictBuilder.UTF8 as E
 
-
-newtype Population =
-  Population { populationPtrUpdate :: Ptr Word8 -> IO (Ptr Word8) }
+newtype Population = Population {populationPtrUpdate :: Ptr Word8 -> IO (Ptr Word8)}
 
 instance Semigroup Population where
   (<>) (Population leftPtrUpdate) (Population rightPtrUpdate) =
@@ -21,10 +20,8 @@ instance Monoid Population where
   mempty =
     Population return
 
-
-{-|
-Turns into the standard lazy bytestring builder.
--}
+-- |
+-- Turns into the standard lazy bytestring builder.
 {-# INLINE populationChunksBuilder #-}
 populationChunksBuilder :: Population -> G.Builder
 populationChunksBuilder (Population ptrUpdate) =
@@ -56,8 +53,8 @@ followParallelly (Population followerPtrUpdate) followeeLength (Population follo
 bytes :: B.ByteString -> Population
 bytes (B.PS foreignPointer offset length) =
   Population $ \ptr ->
-  withForeignPtr foreignPointer $ \ptr' ->
-  B.memcpy ptr (plusPtr ptr' offset) length $> plusPtr ptr length
+    withForeignPtr foreignPointer $ \ptr' ->
+      B.memcpy ptr (plusPtr ptr' offset) length $> plusPtr ptr length
 
 {-# INLINE storable #-}
 storable :: Storable a => Int -> a -> Population
@@ -68,7 +65,7 @@ storable size value =
 word8 :: Word8 -> Population
 word8 value =
   Population $ \ptr ->
-  poke ptr value $> plusPtr ptr 1
+    poke ptr value $> plusPtr ptr 1
 
 {-# INLINE word16BE #-}
 word16BE :: Word16 -> Population

@@ -1,9 +1,8 @@
 module Main where
 
-import Prelude hiding (concat)
-import Criterion.Main
 import ByteString.StrictBuilder
-
+import Criterion.Main
+import Prelude hiding (concat)
 
 main =
   defaultMain [leftAppends, rightAppends, concat]
@@ -20,7 +19,7 @@ leftAppends =
 
 rightAppends :: Benchmark
 rightAppends =
-  bench "rightAppends"  $ whnf action $! replicate 1000 $ bytes "abc"
+  bench "rightAppends" $ whnf action $! replicate 1000 $ bytes "abc"
   where
     action bytesList =
       builderBytes builder
@@ -30,7 +29,7 @@ rightAppends =
 
 concat :: Benchmark
 concat =
-  bench "concat"  $ whnf action $! replicate 10000 $ bytes "abc"
+  bench "concat" $ whnf action $! replicate 10000 $ bytes "abc"
   where
     action bytesList =
       builderBytes (mconcat bytesList)

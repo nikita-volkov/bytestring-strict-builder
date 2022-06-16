@@ -1,38 +1,36 @@
 module ByteString.StrictBuilder
-(
-  Builder,
-  builderBytes,
-  builderChunksBuilder,
-  builderLength,
-  builderPtrFiller,
-  bytes,
-  lazyBytes,
-  asciiIntegral,
-  asciiChar,
-  utf8Char,
-  storable,
-  word8,
-  word16BE,
-  word32BE,
-  word64BE,
-  int8,
-  int16BE,
-  int32BE,
-  int64BE,
-)
+  ( Builder,
+    builderBytes,
+    builderChunksBuilder,
+    builderLength,
+    builderPtrFiller,
+    bytes,
+    lazyBytes,
+    asciiIntegral,
+    asciiChar,
+    utf8Char,
+    storable,
+    word8,
+    word16BE,
+    word32BE,
+    word64BE,
+    int8,
+    int16BE,
+    int32BE,
+    int64BE,
+  )
 where
 
-import ByteString.StrictBuilder.Prelude
 import qualified ByteString.StrictBuilder.Population as A
+import ByteString.StrictBuilder.Prelude
+import qualified ByteString.StrictBuilder.UTF8 as E
 import qualified Data.ByteString as B
+import qualified Data.ByteString.Builder.Internal as G
 import qualified Data.ByteString.Internal as C
 import qualified Data.ByteString.Lazy as F
-import qualified Data.ByteString.Builder.Internal as G
-import qualified ByteString.StrictBuilder.UTF8 as E
 
-
-data Builder =
-  Builder !Int !A.Population
+data Builder
+  = Builder !Int !A.Population
 
 instance Semigroup Builder where
   (<>) (Builder leftSize leftPopulation) (Builder rightSize rightPopulation) =
@@ -67,49 +65,45 @@ instance Show Builder where
   show =
     show . builderBytes
 
-
--- *
 -------------------------
 
-{-|
-Efficiently constructs a strict bytestring.
--}
+-- |
+-- Efficiently constructs a strict bytestring.
 {-# INLINE builderBytes #-}
 builderBytes :: Builder -> ByteString
 builderBytes (Builder size population) =
   C.unsafeCreate size $ \ptr -> A.populationPtrUpdate population ptr $> ()
 
-{-|
-Converts into the standard lazy bytestring builder.
-Does so efficiently using the internal APIs of \"bytestring\",
-without producing any intermediate representation.
--}
+-- |
+-- Converts into the standard lazy bytestring builder.
+-- Does so efficiently using the internal APIs of \"bytestring\",
+-- without producing any intermediate representation.
 {-# INLINE builderChunksBuilder #-}
 builderChunksBuilder :: Builder -> G.Builder
 builderChunksBuilder (Builder size population) =
   G.ensureFree size <> A.populationChunksBuilder population
 
-{-|
-/O(1)/. Gets the size of the bytestring that is to be produced.
--}
+-- |
+-- /O(1)/. Gets the size of the bytestring that is to be produced.
 {-# INLINE builderLength #-}
 builderLength :: Builder -> Int
 builderLength (Builder size population) =
   size
 
-{-|
-Use the builder to populate a buffer.
-It is your responsibility to ensure that the bounds are not exceeded.
--}
+-- |
+-- Use the builder to populate a buffer.
+-- It is your responsibility to ensure that the bounds are not exceeded.
 {-# INLINE builderPtrFiller #-}
 builderPtrFiller ::
-  Builder -> 
-  (Int -> (Ptr Word8 -> IO ()) -> result) {-^ A continuation on the amount of bytes to be written and the action populating the pointer. -} -> result
+  Builder ->
+  -- | A continuation on the amount of bytes to be written and the action populating the pointer.
+  (Int -> (Ptr Word8 -> IO ()) -> result) ->
+  result
 builderPtrFiller (Builder size (A.Population ptrUpdate)) cont =
   cont size (void . ptrUpdate)
 
-
 -- * Primitives
+
 -------------------------
 
 {-# INLINE bytes #-}
@@ -127,11 +121,11 @@ byte :: Word8 -> Builder
 byte =
   word8
 
-
 -- * Extras
+
 -------------------------
 
-{-# INLINABLE asciiIntegral #-}
+{-# INLINEABLE asciiIntegral #-}
 asciiIntegral :: Integral a => a -> Builder
 asciiIntegral =
   \case
@@ -139,8 +133,8 @@ asciiIntegral =
       byte 48
     x ->
       bool ((<>) (byte 45)) id (x >= 0) $
-      loop mempty $
-      abs x
+        loop mempty $
+          abs x
   where
     loop builder remainder =
       case remainder of
@@ -228,4 +222,3 @@ bytes_3 b1 b2 b3 =
 bytes_4 :: Word8 -> Word8 -> Word8 -> Word8 -> Builder
 bytes_4 b1 b2 b3 b4 =
   Builder 4 (A.bytes_4 b1 b2 b3 b4)
-
