@@ -77,7 +77,9 @@ Efficiently constructs a strict bytestring.
 {-# INLINE builderBytes #-}
 builderBytes :: Builder -> ByteString
 builderBytes (Builder size population) =
-  C.unsafeCreate size $ \ptr -> A.populationPtrUpdate population ptr $> ()
+  case population of
+    A.Population upd -> C.unsafeCreate size $ \ptr -> upd ptr $> ()
+    A.Bytes bs -> bs
 
 {-|
 Converts into the standard lazy bytestring builder.

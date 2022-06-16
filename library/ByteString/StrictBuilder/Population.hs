@@ -9,12 +9,13 @@ import qualified ByteString.StrictBuilder.Population.UncheckedShifting as D
 import qualified ByteString.StrictBuilder.UTF8 as E
 
 
-newtype Population =
-  Population { populationPtrUpdate :: Ptr Word8 -> IO (Ptr Word8) }
+data Population =
+    Population !(Ptr Word8 -> IO (Ptr Word8))
+  | Bytes !B.ByteString
 
 instance Semigroup Population where
-  (<>) (Population leftPtrUpdate) (Population rightPtrUpdate) =
-    Population (leftPtrUpdate >=> rightPtrUpdate)
+  (<>) left right =
+    Population (populationPtrUpdate left >=> populationPtrUpdate right)
 
 instance Monoid Population where
   {-# INLINE mempty #-}
@@ -27,37 +28,42 @@ Turns into the standard lazy bytestring builder.
 -}
 {-# INLINE populationChunksBuilder #-}
 populationChunksBuilder :: Population -> G.Builder
-populationChunksBuilder (Population ptrUpdate) =
+populationChunksBuilder p =
   G.builder stepUpdate
   where
     stepUpdate :: G.BuildStep a -> G.BuildStep a
     stepUpdate nextStep (G.BufferRange beginningPtr afterPtr) =
       do
-        newBeginningPtr <- ptrUpdate beginningPtr
+        newBeginningPtr <- populationPtrUpdate p beginningPtr
         nextStep $! G.BufferRange newBeginningPtr afterPtr
 
 {-# INLINE followParallelly #-}
 followParallelly :: Population -> Int -> Population -> Population
-followParallelly (Population followerPtrUpdate) followeeLength (Population followeePtrUpdate) =
+followParallelly follower followeeLength followee =
   Population ptrUpdate
   where
     ptrUpdate ptr =
       do
         lock <- newEmptyMVar
         forkIO $ do
-          followeePtrUpdate ptr
+          populationPtrUpdate followee ptr
           putMVar lock ()
-        followerPtrUpdate (plusPtr ptr followeeLength) <* takeMVar lock
+        populationPtrUpdate follower (plusPtr ptr followeeLength) <* takeMVar lock
 
 -- |
 -- Write the given bytes into the pointer and
 -- return a pointer incremented by the amount of written bytes.
 {-# INLINE bytes #-}
 bytes :: B.ByteString -> Population
-bytes (B.PS foreignPointer offset length) =
-  Population $ \ptr ->
-  withForeignPtr foreignPointer $ \ptr' ->
-  B.memcpy ptr (plusPtr ptr' offset) length $> plusPtr ptr length
+bytes = Bytes
+
+{-# INLINE populationPtrUpdate #-}
+populationPtrUpdate :: Population -> Ptr Word8 -> IO (Ptr Word8)
+populationPtrUpdate p = case p of
+  Population u -> u
+  Bytes (B.PS foreignPointer offset length) -> \ptr ->
+    withForeignPtr foreignPointer $ \ptr' ->
+    B.memcpy ptr (plusPtr ptr' offset) length $> plusPtr ptr length
 
 {-# INLINE storable #-}
 storable :: Storable a => Int -> a -> Population
