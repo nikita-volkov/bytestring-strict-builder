@@ -6,7 +6,7 @@ import ByteString.StrictBuilder
 
 
 main =
-  defaultMain [leftAppends, rightAppends, concat]
+  defaultMain [leftAppends, rightAppends, concat, copy]
 
 leftAppends :: Benchmark
 leftAppends =
@@ -34,3 +34,11 @@ concat =
   where
     action bytesList =
       builderBytes (mconcat bytesList)
+
+copy :: Benchmark
+copy =
+  bench "copy" $ whnf action $! bytes dat
+  where
+    dat = builderBytes $ mconcat $ replicate 1000000 $ bytes "abc"
+    action bs =
+      builderBytes bs
