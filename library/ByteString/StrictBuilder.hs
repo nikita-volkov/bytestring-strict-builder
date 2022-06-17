@@ -29,6 +29,12 @@ import qualified Data.ByteString.Builder.Internal as G
 import qualified Data.ByteString.Internal as C
 import qualified Data.ByteString.Lazy as F
 
+-- * Rewrite rules
+
+{-# RULES "builderBytes/bytes" forall a. builderBytes (bytes a) = a #-}
+
+-- * Builder
+
 data Builder
   = Builder !Int !A.Population
 
@@ -69,7 +75,7 @@ instance Show Builder where
 
 -- |
 -- Efficiently constructs a strict bytestring.
-{-# INLINE builderBytes #-}
+{-# NOINLINE builderBytes #-}
 builderBytes :: Builder -> ByteString
 builderBytes (Builder size population) =
   C.unsafeCreate size $ \ptr -> A.populationPtrUpdate population ptr $> ()
@@ -106,7 +112,7 @@ builderPtrFiller (Builder size (A.Population ptrUpdate)) cont =
 
 -------------------------
 
-{-# INLINE bytes #-}
+{-# NOINLINE bytes #-}
 bytes :: ByteString -> Builder
 bytes bytes =
   Builder (B.length bytes) (A.bytes bytes)
