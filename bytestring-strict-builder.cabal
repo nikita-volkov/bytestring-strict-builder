@@ -1,5 +1,5 @@
 name: bytestring-strict-builder
-version: 0.4.5.5
+version: 0.4.5.6
 category: Text, ByteString, Builders, Serialization
 synopsis: An efficient strict bytestring builder
 description:
