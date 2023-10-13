@@ -132,15 +132,15 @@ byte =
 -------------------------
 
 {-# INLINEABLE asciiIntegral #-}
-asciiIntegral :: Integral a => a -> Builder
+asciiIntegral :: (Integral a) => a -> Builder
 asciiIntegral =
   \case
     0 ->
       byte 48
     x ->
-      bool ((<>) (byte 45)) id (x >= 0) $
-        loop mempty $
-          abs x
+      bool ((<>) (byte 45)) id (x >= 0)
+        $ loop mempty
+        $ abs x
   where
     loop builder remainder =
       case remainder of
@@ -157,7 +157,7 @@ asciiChar =
   byte . fromIntegral . ord
 
 {-# INLINE CONLIKE storable #-}
-storable :: Storable a => a -> Builder
+storable :: (Storable a) => a -> Builder
 storable value =
   Builder size (A.storable size value)
   where
