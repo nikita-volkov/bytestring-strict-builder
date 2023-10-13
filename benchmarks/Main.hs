@@ -4,6 +4,7 @@ import ByteString.StrictBuilder
 import Criterion.Main
 import Prelude hiding (concat)
 
+main :: IO ()
 main =
   defaultMain [leftAppends, rightAppends, concat, copy]
 
