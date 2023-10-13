@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# OPTIONS_GHC -Wno-unused-imports #-}
 
 module ByteString.StrictBuilder.Population where
 
@@ -8,6 +9,7 @@ import qualified ByteString.StrictBuilder.UTF8 as E
 import qualified Data.ByteString.Builder.Internal as G
 import qualified Data.ByteString.Internal as B
 import qualified Data.ByteString.Lazy.Internal as C
+import Foreign.Marshal.Utils
 
 newtype Population = Population {populationPtrUpdate :: Ptr Word8 -> IO (Ptr Word8)}
 
@@ -54,10 +56,10 @@ bytes :: B.ByteString -> Population
 bytes (B.PS foreignPointer offset length) =
   Population $ \ptr ->
     withForeignPtr foreignPointer $ \ptr' ->
-      B.memcpy ptr (plusPtr ptr' offset) length $> plusPtr ptr length
+      copyBytes ptr (plusPtr ptr' offset) length $> plusPtr ptr length
 
 {-# INLINE storable #-}
-storable :: Storable a => Int -> a -> Population
+storable :: (Storable a) => Int -> a -> Population
 storable size value =
   Population (\ptr -> poke (castPtr ptr) value $> plusPtr ptr size)
 
