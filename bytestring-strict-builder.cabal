@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          bytestring-strict-builder
-version:       0.4.5.7
+version:       0.4.5.8
 category:      Text, ByteString, Builders, Serialization
 synopsis:      An efficient strict bytestring builder
 description:
