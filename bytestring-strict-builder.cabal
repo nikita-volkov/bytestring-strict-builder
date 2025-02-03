@@ -92,7 +92,7 @@ test-suite tests
     , quickcheck-instances >=0.3.11 && <0.4
     , rerebase >=1.10 && <2
     , tasty >=1.4 && <2
-    , tasty-quickcheck >=0.10 && <0.11
+    , tasty-quickcheck >=0.10 && <0.12
 
 benchmark benchmarks
   import:         base
